@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
 	"my_project/go-demo/k3cloud_webapi/constant"
 	"my_project/go-demo/k3cloud_webapi/model"
 	"my_project/go-demo/k3cloud_webapi/util"
@@ -138,7 +139,7 @@ func (c *WebApiClient) BuildHeader(serviceURL string) map[string]string {
 
 // PostJson 发送POST请求
 func (c *WebApiClient) PostJson(serviceName string, jsonData map[string]interface{}, invokeType constant.InvokeMethod) (string, error) {
-	fmt.Println("[yuan] PostJson enter", serviceName, jsonData, invokeType)
+	//fmt.Println("[yuan] PostJson enter", serviceName, jsonData, invokeType)
 	if jsonData == nil {
 		jsonData = make(map[string]interface{})
 	}
@@ -187,9 +188,9 @@ func (c *WebApiClient) PostJson(serviceName string, jsonData map[string]interfac
 		}
 	}
 
-	fmt.Println("[yuan] requests.post before url", reqURL)
-	fmt.Println("[yuan] requests.post before headers", c.BuildHeader(reqURL))
-	fmt.Println("[yuan] requests.post before data", string(jsonBytes))
+	//fmt.Println("[yuan] requests.post before url", reqURL)
+	//fmt.Println("[yuan] requests.post before headers", c.BuildHeader(reqURL))
+	//fmt.Println("[yuan] requests.post before data", string(jsonBytes))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -197,12 +198,9 @@ func (c *WebApiClient) PostJson(serviceName string, jsonData map[string]interfac
 	}
 	defer resp.Body.Close()
 
-	fmt.Println("[yuan] requests.post after", resp.Status)
-
 	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusPartialContent {
-		c.FillCookieAndHeader(resp.Cookies(), resp.Header)
-		body := make([]byte, resp.ContentLength)
-		_, err := resp.Body.Read(body)
+		//c.FillCookieAndHeader(resp.Cookies(), resp.Header)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return "", err
 		}
@@ -235,7 +233,7 @@ func (c *WebApiClient) FillCookieAndHeader(cookies []*http.Cookie, headers http.
 
 // Execute 执行请求
 func (c *WebApiClient) Execute(serviceName string, jsonData map[string]interface{}, invokeType constant.InvokeMethod) (string, error) {
-	fmt.Println("[yuan] Execute enter", serviceName, jsonData, invokeType)
+	//fmt.Println("[yuan] Execute enter", serviceName, jsonData, invokeType)
 	if !c.Initialize {
 		return "", fmt.Errorf("拒绝请求，请先正确初始化!")
 	}

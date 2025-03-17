@@ -6,11 +6,11 @@ import (
 )
 
 func main() {
-	fmt.Println("hello world")
+	//fmt.Println("hello world")
 	sdk := k3cloud_webapi.NewK3CloudApiSdk()
 	sdk.Init("./conf.ini", "config")
 	kwargs := map[string]interface{}{
-		"Number": "web0002",
+		"Number": "1.01.01100001",
 	}
 	MaterialView(sdk, kwargs)
 
